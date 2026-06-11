@@ -1,22 +1,28 @@
 import Link from "next/link";
+import { cars } from "../app/data/cars";
 
-const carImages = [
-  [
-    "/cars/peugeot-308-2015/1.jpg",
-    "/cars/volkswagen-touran-2011/1.jpg",
-    "/cars/volkswagen-golf-2011/1.jpg",
-  ],
-  [
-    "/cars/volkswagen-touran-2011/2.jpg",
-    "/cars/peugeot-308-2015/2.jpg",
-    "/cars/volkswagen-golf-2011/2.jpg",
-  ],
-  [
-    "/cars/volkswagen-golf-2011/3.jpg",
-    "/cars/peugeot-308-2015/3.jpg",
-    "/cars/volkswagen-touran-2011/3.jpg",
-  ],
-];
+const getCarGallery = (car: any) => {
+  const images = Array.isArray(car.images) && car.images.length > 0
+    ? car.images
+    : car.image
+      ? [car.image]
+      : [];
+
+  return images.filter(Boolean);
+};
+
+const activeCars = cars.slice(0, 3);
+
+const carImages = [0, 1, 2].map((slot) =>
+  activeCars
+    .map((car) => {
+      const gallery = getCarGallery(car);
+      return gallery[slot] || gallery[0];
+    })
+    .filter(Boolean)
+);
+
+const hasHeroImages = carImages.some((gallery) => gallery.length > 0);
 
 export default function Hero() {
   return (
@@ -36,25 +42,13 @@ export default function Hero() {
           Compra y vende tu coche con seguridad.
         </h1>
 
-        <div className="mt-8 overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.04] p-3">
-          <div className="grid grid-cols-[1.35fr_0.85fr] gap-3">
-            <div className="relative h-40 overflow-hidden rounded-[1.4rem] bg-black">
-              {carImages[0].map((src, index) => (
-                <img
-                  key={src}
-                  src={src}
-                  alt="Vehículo Motor Selection"
-                  className="hero-car-fade absolute inset-0 h-full w-full object-cover"
-                  style={{ animationDelay: `${index * 3}s` }}
-                />
-              ))}
-            </div>
-
-            <div className="grid gap-3">
-              <div className="relative h-[4.65rem] overflow-hidden rounded-[1.2rem] bg-black">
-                {carImages[1].map((src, index) => (
+        {hasHeroImages && (
+          <div className="mt-8 overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.04] p-3">
+            <div className="grid grid-cols-[1.35fr_0.85fr] gap-3">
+              <div className="relative h-40 overflow-hidden rounded-[1.4rem] bg-black">
+                {carImages[0].map((src, index) => (
                   <img
-                    key={src}
+                    key={`mobile-main-${src}-${index}`}
                     src={src}
                     alt="Vehículo Motor Selection"
                     className="hero-car-fade absolute inset-0 h-full w-full object-cover"
@@ -63,20 +57,34 @@ export default function Hero() {
                 ))}
               </div>
 
-              <div className="relative h-[4.65rem] overflow-hidden rounded-[1.2rem] bg-black">
-                {carImages[2].map((src, index) => (
-                  <img
-                    key={src}
-                    src={src}
-                    alt="Vehículo Motor Selection"
-                    className="hero-car-fade absolute inset-0 h-full w-full object-cover"
-                    style={{ animationDelay: `${index * 3}s` }}
-                  />
-                ))}
+              <div className="grid gap-3">
+                <div className="relative h-[4.65rem] overflow-hidden rounded-[1.2rem] bg-black">
+                  {carImages[1].map((src, index) => (
+                    <img
+                      key={`mobile-top-${src}-${index}`}
+                      src={src}
+                      alt="Vehículo Motor Selection"
+                      className="hero-car-fade absolute inset-0 h-full w-full object-cover"
+                      style={{ animationDelay: `${index * 3}s` }}
+                    />
+                  ))}
+                </div>
+
+                <div className="relative h-[4.65rem] overflow-hidden rounded-[1.2rem] bg-black">
+                  {carImages[2].map((src, index) => (
+                    <img
+                      key={`mobile-bottom-${src}-${index}`}
+                      src={src}
+                      alt="Vehículo Motor Selection"
+                      className="hero-car-fade absolute inset-0 h-full w-full object-cover"
+                      style={{ animationDelay: `${index * 3}s` }}
+                    />
+                  ))}
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        )}
 
         <p className="mt-6 text-base leading-7 text-zinc-300">
           Vehículos seleccionados, gestión de venta y búsqueda personalizada en Figueres y Girona.
@@ -125,26 +133,28 @@ export default function Hero() {
             Compra y vende tu coche con más seguridad.
           </h1>
 
-          <div className="mt-8 max-w-[42rem] overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.04] p-3">
-            <div className="grid grid-cols-3 gap-4">
-              {carImages.map((gallery, slot) => (
-                <div
-                  key={slot}
-                  className="relative h-36 overflow-hidden rounded-[1.3rem] bg-black"
-                >
-                  {gallery.map((src, index) => (
-                    <img
-                      key={src}
-                      src={src}
-                      alt="Vehículo Motor Selection"
-                      className="hero-car-fade absolute inset-0 h-full w-full object-cover"
-                      style={{ animationDelay: `${index * 3}s` }}
-                    />
-                  ))}
-                </div>
-              ))}
+          {hasHeroImages && (
+            <div className="mt-8 max-w-[42rem] overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.04] p-3">
+              <div className="grid grid-cols-3 gap-4">
+                {carImages.map((gallery, slot) => (
+                  <div
+                    key={slot}
+                    className="relative h-36 overflow-hidden rounded-[1.3rem] bg-black"
+                  >
+                    {gallery.map((src, index) => (
+                      <img
+                        key={`desktop-${slot}-${src}-${index}`}
+                        src={src}
+                        alt="Vehículo Motor Selection"
+                        className="hero-car-fade absolute inset-0 h-full w-full object-cover"
+                        style={{ animationDelay: `${index * 3}s` }}
+                      />
+                    ))}
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
 
           <p className="mt-8 max-w-3xl text-lg leading-8 text-zinc-300">
             Vehículos seleccionados, gestión de venta y búsqueda personalizada en Figueres y Girona.
